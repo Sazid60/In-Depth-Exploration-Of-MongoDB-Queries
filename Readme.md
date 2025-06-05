@@ -228,3 +228,61 @@ db.test
   .find({ gender: "Male" })
   .project({ name: 1, gender: 1, email: 1, phone: 1 });
 ```
+
+## 15-3 $eq, $neq, $gt, $lt, $gte, $lte
+
+[Mongodb Comparison Operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/)
+
+#### $eq Operator
+
+- Structure of defining operator. thumb rule is we have to keep the operator inside {}
+
+```
+{ <field>: { $eq: <value> } }
+```
+
+- lets see how we can get all the male using the $eq comparison operator
+
+```js
+db.test.find({ gender: { $eq: "Male" } });
+```
+
+#### $ne Operator
+
+```js
+db.test.find({ gender: { $ne: "Male" } });
+```
+
+#### $gt & $lt Operator
+
+```js
+db.test.find({ age: { $gt: 20 } });
+```
+
+```js
+db.test.find({ age: { $lt: 20 } });
+```
+
+#### $gte & $lte Operator
+
+```js
+db.test.find({ age: { $gte: 20 } });
+```
+
+```js
+db.test.find({ age: { $lte: 20 } });
+```
+
+#### sorting (asc desc)
+
+- Ascending sort
+
+```js
+db.test.find({ age: { $lt: 20 } }).sort({ age: 1 });
+```
+
+- Descending Sort
+
+```js
+db.test.find({ age: { $lt: 20 } }).sort({ age: -1 });
+```
