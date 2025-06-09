@@ -286,3 +286,85 @@ db.test.find({ age: { $lt: 20 } }).sort({ age: 1 });
 ```js
 db.test.find({ age: { $lt: 20 } }).sort({ age: -1 });
 ```
+
+## 15-4 $in, $nin, implicit and condition
+
+#### Implicit And `,`
+
+- Implicit and means if all the condition is given is true give me the document.
+- If we want to merge two condition we have to use `Implicit And`. Suppose we want to find the person aged between 18 and 30 and have to be Female.
+- We can join multiple conditions using `,`.
+
+```js
+db.test
+  .find(
+    { gender: "Female", age: { $gte: 18, $lte: 30 } },
+    { age: 1, gender: 1 }
+  )
+  .sort({ age: 1 });
+```
+
+#### $in & $nin
+
+- The $in operator selects the documents where the value of a field equals any value in the specified array. That means if any one matches it will give the document.
+
+- structure
+
+```
+{ field: { $in: [<value1>, <value2>, ... <valueN> ] } }
+```
+
+- Suppose we want to see specific age numbered persons. not like a specific range.
+
+```js
+db.test
+  .find(
+    { gender: "Female", age: { $in: [18, 20, 22, 24, 26, 28, 30] } },
+    { age: 1, gender: 1 }
+  )
+  .sort({ age: 1 });
+```
+
+- This can be reversed using $nin
+
+```js
+db.test
+  .find(
+    { gender: "Female", age: { $nin: [18, 20, 22, 24, 26, 28, 30] } },
+    { age: 1, gender: 1 }
+  )
+  .sort({ age: 1 });
+```
+
+- Lets match with interests filed
+
+```js
+db.test
+  .find(
+    {
+      gender: "Female",
+      age: { $nin: [18, 20, 22, 24, 26, 28, 30] },
+      interests: "Cooking",
+    },
+    { age: 1, gender: 1, interests: 1 }
+  )
+  .sort({ age: 1 });
+```
+
+![alt text](image-13.png)
+
+- If want to use the $nin or $in with a array fileds we want to match we can use like this one.
+- If any document value matches with the cooking or gaming or both it will show result.
+
+```js
+db.test
+  .find(
+    {
+      gender: "Female",
+      age: { $nin: [18, 20, 22, 24, 26, 28, 30] },
+      interests: { $in: ["Cooking", "Gaming"] },
+    },
+    { age: 1, gender: 1, interests: 1 }
+  )
+  .sort({ age: 1 });
+```
