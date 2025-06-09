@@ -368,3 +368,116 @@ db.test
   )
   .sort({ age: 1 });
 ```
+
+## 15-5 $and, $or, implicit vs explicit
+
+## Implicit And
+
+- If we are working in the same filed we have to use `implicit and` separately. we have to keep it under same bracket.
+- wrong
+
+```js
+db.test.find({age: {$ne : 15}}, age: {$lte : 30})
+```
+
+- Correct
+
+```js
+db.test.find({ age: { $ne: 15, $lte: 30 } });
+```
+
+- It can be done using `Explicit And`
+
+#### Explicit $and
+
+- $and performs a logical AND operation on an array of one or more expressions (<expression1>, <expression2>, and so on) and selects the documents that satisfy all the expressions.
+
+- Structure
+
+```js
+{ $and: [ { <expression1> }, { <expression2> } , ... , { <expressionN> } ] }
+```
+
+```js
+db.test
+  .find({
+    $and: [{ gender: "Female" }, { age: { $ne: 15 } }, { age: { $lte: 30 } }],
+  })
+  .project({ age: 1 })
+  .sort({ age: 1 });
+```
+
+- when there is more nested conditions we have to apply we have to use `Explicit $and` to avoid any error.
+
+#### Explicit $or
+
+- The $or operator performs a logical OR operation on an array of one or more <expressions> and selects the documents that satisfy at least one of the <expressions>.
+
+- Structure
+
+```js
+{ $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
+```
+
+```js
+db.test
+  .find({
+    $or: [{ gender: "Female" }, { age: { $ne: 15 } }, { age: { $lte: 30 } }],
+  })
+  .project({ age: 1, gender: 1 })
+  .sort({ age: 1 });
+```
+
+```js
+db.test
+  .find({
+    $or: [
+      {
+        interests: "Traveling",
+      },
+      {
+        interests: "Cooking",
+      },
+    ],
+  })
+  .project({ age: 1, gender: 1, interests: 1 })
+  .sort({ age: 1 });
+```
+
+- Now lets think about how to implement conditions in array of object
+
+```js
+db.test
+  .find({
+    $or: [{ "skills.name": "JAVASCRIPT" }, { "skills.name": "PYTHON" }],
+  })
+  .project({ skills: 1 });
+```
+
+- we have to do dot notation and have to keep inside the "".
+- Implicit or do the same kind of works we can use it as well since in case of working with same field.
+
+```js
+db.test
+  .find({
+    "skills.name": { $in: ["JAVASCRIPT", "PYTHON"] },
+  })
+  .project({ skills: 1 });
+```
+
+#### $nor
+
+- Structure
+
+```js
+{ $nor: [ { <expression1> }, { <expression2> }, ...  { <expressionN> } ] }
+```
+
+#### $not
+
+- $not performs a logical NOT operation on the specified <operator-expression> and selects the documents that do not match the <operator-expression>. This includes documents that do not contain the field.
+- Structure
+
+```js
+{ field: { $not: { <operator-expression> } } }
+```
