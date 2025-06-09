@@ -371,7 +371,7 @@ db.test
 
 ## 15-5 $and, $or, implicit vs explicit
 
-## Implicit And
+#### Implicit And
 
 - If we are working in the same filed we have to use `implicit and` separately. we have to keep it under same bracket.
 - wrong
@@ -480,4 +480,57 @@ db.test
 
 ```js
 { field: { $not: { <operator-expression> } } }
+```
+
+## 15-6 $exists, $type,$size (element Query Operator)
+
+#### $exists
+
+- This Shows If any field really exists in a document or not.
+- The $exists operator matches documents that contain or do not contain a specified field, including documents where the field value is null.
+- structure
+
+```js
+{ field: { $exists: <boolean> } }
+```
+
+```js
+db.test.find({ phone: { $exists: false } });
+```
+
+- There is problem with exists like if any filed is `null, undefined or empty array` we can not find. He will just tell company field exists or not. Does not work with field value.
+- This type of `null, undefined or empty array` value can be seen by using `$size`
+
+#### $size
+
+- The $size operator matches any array with the number of elements specified by the argument.
+
+```js
+db.test.find({ friends: { $size: 4 } }).project({ friends: 1 });
+```
+
+```js
+db.test.find({ friends: { $size: 0 } }).project({ friends: 1 });
+```
+
+- This will only show the array that have 4 values.
+- Remember this works with array only
+- If its not a array field we have to use `$type`
+
+```js
+db.test.find({ company: { $type: "null" } });
+```
+
+#### $type
+
+- $type selects documents where the value of the field is an instance of the specified BSON type(s). Querying by data type is useful when dealing with highly unstructured data where data types are not predictable.
+- structure
+
+```js
+{ field: { $type: <BSON type> } }
+```
+
+```js
+db.test.find({ age: { $type: "string" } });
+db.test.find({ friends: { $type: "array" } });
 ```
