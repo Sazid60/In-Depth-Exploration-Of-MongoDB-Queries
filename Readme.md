@@ -467,6 +467,7 @@ db.test
 
 #### $nor
 
+- The $nor operator in MongoDB performs a logical NOR operation. It returns documents that do not match any of the conditions specified.
 - Structure
 
 ```js
@@ -476,6 +477,7 @@ db.test
 #### $not
 
 - $not performs a logical NOT operation on the specified <operator-expression> and selects the documents that do not match the <operator-expression>. This includes documents that do not contain the field.
+- Use $not to negate a single condition on a field.
 - Structure
 
 ```js
@@ -533,4 +535,85 @@ db.test.find({ company: { $type: "null" } });
 ```js
 db.test.find({ age: { $type: "string" } });
 db.test.find({ friends: { $type: "array" } });
+```
+
+## 15-7 $all , $elemMatch
+
+- lets learn about, array query, object query, array of object query.
+
+### Array
+
+```js
+db.test.find({ interests: "Cooking" }).project({ interests: 1 });
+```
+
+- Suppose we have a situation like we have to see the persons who have the Cooking interest in 2nd index position of the array.
+
+```js
+db.test.find({ "interests.2": "Cooking" }).project({ interests: 1 });
+```
+
+![alt text](image-14.png)
+
+- If we want to match exactly
+
+```js
+db.test
+  .find({ interests: ["Gardening", "Gaming", "Cooking"] })
+  .project({ interests: 1 }); // It will follow the same ordered mentioned and give data
+```
+
+#### $all Operator
+
+- If we want to match in more flexible way without maintaining order we need to use $all operator
+- The $all operator selects the documents where the value of a field matches all specified values. The matched documents can either contain a field with a value that is an array containing all the specified elements, or a field with a single value matching the specified element.
+
+- Structure
+
+```js
+{ <field>: { $all: [ <value1> , <value2> ... ] } }
+```
+
+```js
+db.test
+  .find({ interests: { $all: ["Travelling", "Gaming", "Reading"] } })
+  .project({ interests: 1 });
+```
+
+![alt text](image-15.png)
+
+- 3 values will be there just the position will be flexible.
+
+### Array Of Object
+
+- we can find object as the same way as array.
+- This will exactly match the skills, order have to be same and so value should be missing.
+
+```js
+db.test
+  .find({
+    skills: {
+      name: "JAVASCRIPT",
+      level: "Expert",
+      isLearning: false,
+    },
+  })
+  .project({ skills: 1 });
+```
+
+![alt text](image-16.png)
+
+#### $elemMatch
+
+- If we want to enjoy flexibility we have to use $elemMatch
+- Structure
+
+```js
+{ <field>: { $elemMatch: { <query1>, <query2>, ... } } }
+```
+
+```js
+db.test
+  .find({ skills: { $elemMatch: { name: "JAVASCRIPT", level: "Expert" } } })
+  .project({ skills: 1 });
 ```
