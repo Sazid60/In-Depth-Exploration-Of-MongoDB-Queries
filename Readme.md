@@ -221,7 +221,7 @@ db.test.find(
 );
 ```
 
-- There is an alternative of field filtering named `project`. remember that we can not use the filed Filtering for `findOne`.
+- There is an alternative of field filtering named `project`. remember that we can not use this filed Filtering for `findOne`.
 
 ```js
 db.test
@@ -882,4 +882,69 @@ or
 
 ```js
 db.Posts.drop();
+```
+
+## Practice Task
+
+Practice Data: https://github.com/Apollo-Level2-Web-Dev/mongodb-practice/blob/main/practice-data.json
+
+Task Link: https://drive.google.com/file/d/1Be22y-R8C8SIMg_FOfYm8toz0swpocTT/view?usp=sharing
+
+![alt text](image-17.png)
+
+1. Find all documents in the collection where the age is greater than 30, and
+   only return the name and email fields.
+
+```JS
+db.Testing.find({age:{$gt : 30}}).project({age:1,name:1,email:1})
+```
+
+2. Find documents where the favorite color is either "Maroon" or "Blue."
+
+```JS
+db.Testing.find({favoutiteColor : {$in:["Maroon","Blue"]}}).project({favoutiteColor :1})
+```
+
+3. Find all documents where the skill is an empty array.
+
+```JS
+db.Testing.find({skills : {$size:0}}).project({skills:1})
+```
+
+4. Find documents where the person has skills in both "JavaScript" and
+   "Java."
+
+```JS
+db.Testing.find({"skills.name":{ $all:["JAVASCRIPT","JAVA"]}}).project({skills:1})
+```
+
+5. Add a new skill to the skills array for the document with the email
+   "amccurry3@cnet.com". The skill is
+
+```
+{"name": "Python","level": "Beginner","isLearning": true}
+
+```
+
+```JS
+db.Testing.findOneAndUpdate({email:"amccurry3@cnet.com"}, {$push:{skills: {"name": "Python","level": "Beginner","isLearning": true}}})
+```
+
+6. Add a new language "Spanish" to the list of languages spoken by the
+   person.
+
+```js
+db.Testing.updateOne(
+  { email: "amccurry3@cnet.com" },
+  { $push: { languages: "Spanish" } }
+);
+```
+
+7. Remove the skill with the name "Kotlin" from the skills array.
+
+```js
+db.Testing.updateOne(
+  { email: "amccurry3@cnet.com" },
+  { $pull: { skills: { name: "KOTLIN" } } }
+);
 ```
