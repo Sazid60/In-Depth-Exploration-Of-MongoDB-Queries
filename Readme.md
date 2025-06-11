@@ -663,7 +663,7 @@ db.test.updateOne(
 );
 ```
 
-- $set replaces the field with new update things. This works meaningful only for primitive data type. if its a non primitive data type its not meaningful. We can use $set for non primitive only if we want to replace intentionally.
+- $set replaces the field with new update things. This works meaningful only for primitive data type. if its a non primitive data(array) type its not meaningful. We can use $set for non primitive only if we want to replace intentionally.
 
 ```js
 db.test.updateOne(
@@ -797,3 +797,65 @@ db.test.updateOne(
   { $pullAll: { friends: ["Fahim Ahammed Firoz", "Tanmoy Parvez"] } }
 );
 ```
+
+## 15-10 More about $set, how to explore documentation
+
+- lets Update a object
+- for primitive type and non primitive object we can use $set
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $set: { "address.city": "Dhaka" } }
+);
+```
+
+- There may be multiple fields or single field
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  {
+    $set: {
+      "address.street": "Atipara",
+      "address.city": "Dhaka",
+      "address.country": "Bangladesh",
+    },
+  }
+);
+```
+
+#### $ (update) operator
+
+[Updating Array Of Object](https://www.mongodb.com/community/forums/t/mongodb-update-a-value-in-array-of-object-of-array/208302)
+[$ (update) operator](https://www.mongodb.com/docs/manual/reference/operator/update/positional/)
+
+- To Update an array of object we have to use positional operator $ . this ensures only one document will be updated.
+- The positional $ operator identifies an element in an array to update without explicitly specifying the position of the element in the array.
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065"), "education.major": "Art" },
+  { $set: { "education.$.degree": "Arts With Sazid" } }
+);
+```
+
+- It will match the elements of an array and will interact with the first element he found. no matter other matching element exists.
+
+#### $inc
+
+- The $inc operator increments a field by a specified value.
+- structure
+
+```js
+{ $inc: { <field1>: <amount1>, <field2>: <amount2>, ... } }
+```
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $inc: { age: 3 } }
+);
+```
+
+## 15-11 delete documents, drop collection and how to explore by yourself
