@@ -859,3 +859,27 @@ db.test.updateOne(
 ```
 
 ## 15-11 delete documents, drop collection and how to explore by yourself
+
+- If we want to delete a document we have to use deleteOne
+
+```js
+db.test.deleteOne({ _id: ObjectId("6406ad63fc13ae5a40000065") });
+```
+
+- If we want to create a new collection
+
+```js
+db.createCollection("Posts");
+```
+
+- If we want to drop a collection
+
+```js
+db.posts.drop({ writeConcern: { w: 1 } });
+```
+
+or
+
+```js
+db.Posts.drop();
+```
