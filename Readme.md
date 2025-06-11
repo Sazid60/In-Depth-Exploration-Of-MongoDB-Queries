@@ -719,3 +719,81 @@ db.test.updateOne(
   { $push: { interests: { $each: ["Ghum", "Khawa"] } } }
 );
 ```
+
+## 15-9 $unset, $pop, $pull, $pullAll
+
+#### $unset
+
+- The $unset operator deletes a particular field.
+- structure
+
+```js
+{ $unset: { <field1>: "", ... } }
+```
+
+- We can remove like this too.
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $unset: { age: 1 } }
+);
+```
+
+#### $pop
+
+- If we want too remove something from array we have to use array update operator
+- structure
+
+```js
+{ $pop: { <field>: <-1 | 1>, ... } }
+```
+
+- here 1 means it will remove last element of array
+- here -1 means it will remove from first element of the array
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $pop: { friends: -1 } }
+);
+```
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $pop: { friends: 1 } }
+);
+```
+
+#### $pull
+
+- If we want to pull a specific element by name and remove we have to use $pull operator
+- structure
+
+```js
+{ $pull: { <field1>: <value|condition>, <field2>: <value|condition>, ... } }
+```
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $pull: { friends: "Mir Hussain" } }
+);
+```
+
+##### $pullAll
+
+- If we want to pull multiple elements from an array we have to use $pullAll
+- structure
+
+```js
+{ $pullAll: { <field1>: [ <value1>, <value2> ... ], ... } }
+```
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $pullAll: { friends: ["Fahim Ahammed Firoz", "Tanmoy Parvez"] } }
+);
+```
