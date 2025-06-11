@@ -617,3 +617,105 @@ db.test
   .find({ skills: { $elemMatch: { name: "JAVASCRIPT", level: "Expert" } } })
   .project({ skills: 1 });
 ```
+
+## 15-8 $set, $addToSet, $push,
+
+#### $set
+
+- The $set operator replaces the value of a field with the specified value.
+- Structure
+
+```js
+{ $set: { <field1>: <value1>, ... } }
+```
+
+- Dummy Code
+
+```js
+db.products.updateOne(
+  { _id: 100 },
+  {
+    $set: {
+      quantity: 500,
+      details: { model: "2600", make: "Fashionaires" },
+      tags: ["coats", "outerwear", "clothing"],
+    },
+  }
+);
+```
+
+- Meaning
+
+```js
+db.test.updateOne(
+    {kake update korbo},
+    { $set: {ki update korbo} },
+    {Options like }
+)
+```
+
+- Updating age
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $set: { age: 22 } }
+);
+```
+
+- $set replaces the field with new update things. This works meaningful only for primitive data type. if its a non primitive data type its not meaningful. We can use $set for non primitive only if we want to replace intentionally.
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $set: { interests: ["Gaming", "Cooking"] } }
+);
+```
+
+- It will replace the array with the new array valued array.
+
+#### $addToSet
+
+- For updating non-primitive data we will use $addToSet. This will set inside the array keeping `no duplicates`.
+- The $addToSet operator adds a value to an array unless the value is already present, in which case $addToSet does nothing to that array.
+- Structure
+
+```js
+{ $addToSet: { <field1>: <value1>, ... } }
+```
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $addToSet: { interests: "Sleeping" } }
+);
+```
+
+##### $each Modifier
+
+- The $each modifier allows the $addToSet operator to add multiple values to the array field.
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $addToSet: { interests: { $each: ["Ghum", "Khawa"] } } }
+);
+```
+
+- This will Not Duplicate the things
+
+#### $push Operator
+
+- If we want to keep the duplicates we have to use $push
+- Structure
+
+```js
+{ $push: { <field1>: { <modifier1>: <value1>, ... }, ... } }
+```
+
+```js
+db.test.updateOne(
+  { _id: ObjectId("6406ad63fc13ae5a40000065") },
+  { $push: { interests: { $each: ["Ghum", "Khawa"] } } }
+);
+```
